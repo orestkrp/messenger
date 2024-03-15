@@ -1,4 +1,5 @@
 "use client";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { FC } from "react";
 
@@ -7,6 +8,7 @@ interface AvatarProps {
 }
 
 export const Avatar: FC<AvatarProps> = ({ userImage }) => {
+  const session = useSession();
   return (
     <div className="relative">
       <div
@@ -18,13 +20,19 @@ export const Avatar: FC<AvatarProps> = ({ userImage }) => {
         overflow-hidden 
         rounded-full"
       >
-        <Image
-          src={userImage || "/img/user-placeholder.webp"}
-          width={50}
-          height={50}
-          className="mx-auto w-auto"
-          alt="user placeholder"
-        />
+        <div>
+          <Image
+            src={
+              session.status === "authenticated"
+                ? userImage || "/img/user-placeholder.webp"
+                : "/img/user-placeholder.webp"
+            }
+            width={50}
+            height={50}
+            className="mx-auto w-auto"
+            alt="user placeholder"
+          />
+        </div>
       </div>
       <span
         className="

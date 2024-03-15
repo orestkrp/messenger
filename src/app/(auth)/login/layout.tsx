@@ -1,5 +1,5 @@
 import { getSession } from "@/actions/getSession";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 import { FC } from "react";
 
 const Layout: FC<React.PropsWithChildren> = async ({ children }) => {

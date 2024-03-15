@@ -1,7 +1,7 @@
 import { prismaClient } from "@/libs/prismadb";
 import { getSession } from "./getSession";
 
-const getCurrentUser = async () => {
+export const getCurrentUser = async () => {
   try {
     const session = await getSession();
     if (!session?.user?.email) {
@@ -23,5 +23,3 @@ const getCurrentUser = async () => {
     return null;
   }
 };
-
-export default getCurrentUser;

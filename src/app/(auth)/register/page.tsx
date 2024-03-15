@@ -1,5 +1,6 @@
 "use client";
-import { AuthForm } from "@/components/auth-form";
+import { AuthForm } from "@/components/auth/auth-form";
+import { AuthLayout } from "@/components/auth/auth-layout";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { FieldValues } from "react-hook-form";
@@ -20,10 +21,9 @@ const Register = () => {
   };
 
   return (
-    <div>
-      <h1>Register</h1>
+    <AuthLayout>
       <AuthForm type="register" onSubmit={onSubmit} />
-    </div>
+    </AuthLayout>
   );
 };
 
