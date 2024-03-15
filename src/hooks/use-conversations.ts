@@ -6,7 +6,12 @@ const useConversation = () => {
 
   const isOpen = !!conversationId;
 
-  return { isOpen, conversationId };
+  return {
+    isOpen,
+    conversationId: Array.isArray(conversationId)
+      ? conversationId[0]
+      : conversationId,
+  };
 };
 
 export default useConversation;

@@ -9,12 +9,10 @@ const UsersLayout: FC<PropsWithChildren> = async ({ children }) => {
   const users = await getUsers();
 
   return (
-    <Sidebar>
-      <div className="h-full">
-        <ConversationsList users={users} initalConversations={conversations} />
-        {children}
-      </div>
-    </Sidebar>
+    <div className="h-full">
+      <ConversationsList users={users} initalConversations={conversations} />
+      {children}
+    </div>
   );
 };
 

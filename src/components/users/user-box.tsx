@@ -48,7 +48,7 @@ export const UserBox: FC<UserBoxProps> = ({ user }) => {
         transition
         hover:bg-neutral-100"
       >
-        <Avatar userImage={user.image} />
+        <Avatar user={user} />
         <div className="min-w-0 flex-1">
           <div className="focus:outline-none">
             <div className="mb-1 flex items-center justify-between">

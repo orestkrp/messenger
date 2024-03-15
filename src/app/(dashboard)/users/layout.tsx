@@ -6,12 +6,10 @@ import { FC, PropsWithChildren } from "react";
 const UsersLayout: FC<PropsWithChildren> = async ({ children }) => {
   const users = await getUsers();
   return (
-    <Sidebar>
-      <div className="h-full">
-        <UsersList users={users} />
-        {children}
-      </div>
-    </Sidebar>
+    <div className="h-full">
+      <UsersList users={users} />
+      {children}
+    </div>
   );
 };
 

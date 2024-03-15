@@ -1,14 +1,18 @@
 "use client";
+import useActiveList from "@/context/use-active-list";
+import { User } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { FC } from "react";
 
 interface AvatarProps {
-  userImage: string | null;
+  user: User | null;
 }
 
-export const Avatar: FC<AvatarProps> = ({ userImage }) => {
+export const Avatar: FC<AvatarProps> = ({ user }) => {
   const session = useSession();
+  const { members } = useActiveList();
+  const isActive = members.indexOf(user?.email!) !== -1;
   return (
     <div className="relative">
       <div
@@ -24,7 +28,7 @@ export const Avatar: FC<AvatarProps> = ({ userImage }) => {
           <Image
             src={
               session.status === "authenticated"
-                ? userImage || "/img/user-placeholder.webp"
+                ? user?.image || "/img/user-placeholder.webp"
                 : "/img/user-placeholder.webp"
             }
             width={50}
@@ -34,8 +38,9 @@ export const Avatar: FC<AvatarProps> = ({ userImage }) => {
           />
         </div>
       </div>
-      <span
-        className="
+      {isActive && (
+        <span
+          className="
         absolute
         right-0
         top-0
@@ -47,7 +52,8 @@ export const Avatar: FC<AvatarProps> = ({ userImage }) => {
         ring-2 
         ring-white
         "
-      />
+        />
+      )}
     </div>
   );
 };

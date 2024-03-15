@@ -9,6 +9,7 @@ import { IoClose, IoTrash } from "react-icons/io5";
 import { Avatar } from "../ui/avatar";
 import { ConfirmModal } from "../ui/confirm-modal";
 import { GroupAvatar } from "../ui/group-avatar";
+import useActiveList from "@/context/use-active-list";
 
 interface ProfileDrawer {
   onClose: () => void;
@@ -23,13 +24,16 @@ export const ProfileDrawer: FC<ProfileDrawer> = ({
 }) => {
   const otherUser = useUser(conversation);
 
+  const { members } = useActiveList();
+  const isActive = members.indexOf(otherUser?.email!) !== -1;
+
   const [confirmDeleteModalOpen, setConfirmDeleteModalOpen] = useState(false);
 
   const title = conversation.name || otherUser.name;
 
   const joinedDate = format(new Date(otherUser.createdAt), "PP");
 
-  const statusText = "Active";
+  const statusText = isActive ? "Active" : "Offline";
 
   return (
     <Transition.Root show={isOpen} as={Fragment}>
@@ -85,7 +89,7 @@ export const ProfileDrawer: FC<ProfileDrawer> = ({
                           {conversation.isGroup ? (
                             <GroupAvatar users={conversation.users} />
                           ) : (
-                            <Avatar userImage={otherUser.image} />
+                            <Avatar user={otherUser} />
                           )}
                         </div>
                         <div>{title}</div>

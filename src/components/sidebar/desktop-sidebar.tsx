@@ -41,9 +41,7 @@ export const DesktopSidebar: FC<DesktopSidebarProps> = ({ currentUser }) => {
             onClick={() => setIsOpen(true)}
             className="cursor-pointer transition hover:opacity-75"
           >
-            <Avatar
-              userImage={currentUser?.image ? currentUser?.image : null}
-            />
+            <Avatar user={currentUser} />
           </div>
         </nav>
       </div>

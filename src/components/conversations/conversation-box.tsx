@@ -87,7 +87,7 @@ export const ConversationBox: FC<ConversationBoxProps> = ({
       {conversation.isGroup ? (
         <GroupAvatar users={conversation.users} />
       ) : (
-        <Avatar userImage={otherUser.image} />
+        <Avatar user={otherUser} />
       )}
       <div className="min-w-0 flex-1">
         <div className="focus:outline-none">

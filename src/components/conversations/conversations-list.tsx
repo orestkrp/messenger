@@ -1,12 +1,15 @@
 "use client";
 import { FullConversation } from "@/app/types";
 import clsx from "clsx";
-import { FC, useState } from "react";
+import { FC, useEffect, useMemo, useState } from "react";
 import { MdOutlineGroupAdd } from "react-icons/md";
 import { ConversationBox } from "./conversation-box";
 import useConversation from "@/hooks/use-conversations";
 import { GroupChatModal } from "./group-chat-modal";
 import { User } from "@prisma/client";
+import { useSession } from "next-auth/react";
+import { pusherClient } from "@/libs/pusher";
+import { find } from "lodash";
 
 interface ConversationsListProps {
   initalConversations: FullConversation[];
@@ -18,6 +21,64 @@ export const ConversationsList: FC<ConversationsListProps> = ({
   users,
 }) => {
   const [conversations, setConversations] = useState(initalConversations);
+
+  const session = useSession();
+
+  const pusherKey = useMemo(() => {
+    return session.data?.user?.email;
+  }, [session.data?.user?.email]);
+
+  useEffect(() => {
+    if (!pusherKey) {
+      return;
+    }
+    const newConversationHandler = (newConversation: FullConversation) => {
+      setConversations((current) => {
+        if (find(current, { id: newConversation.id })) {
+          return current;
+        }
+        return [newConversation, ...current];
+      });
+    };
+
+    const deleteConversationHandler = (
+      deletedConversation: FullConversation,
+    ) => {
+      setConversations((current) => {
+        return current.filter(
+          (conversation) => conversation.id !== deletedConversation.id,
+        );
+      });
+    };
+
+    const updateConversationHandler = (
+      updatedConversation: FullConversation,
+    ) => {
+      setConversations((current) =>
+        current.map((currentConversation) => {
+          if (currentConversation.id === updatedConversation.id) {
+            return {
+              ...currentConversation,
+              messages: updatedConversation.messages,
+            };
+          }
+          return currentConversation;
+        }),
+      );
+    };
+    pusherClient.subscribe(pusherKey);
+
+    pusherClient.bind("conversation:update", updateConversationHandler);
+    pusherClient.bind("conversation:new", newConversationHandler);
+    pusherClient.bind("conversation:delete", deleteConversationHandler);
+
+    return () => {
+      pusherClient.unsubscribe(pusherKey);
+      pusherClient.unbind("conversation:new", newConversationHandler);
+      pusherClient.unbind("conversation:update", updateConversationHandler);
+      pusherClient.unbind("conversation:delete", deleteConversationHandler);
+    };
+  }, [pusherKey]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
 
