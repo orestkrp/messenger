@@ -1,7 +1,8 @@
 import { NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
-import { authOptions } from "../../auth/[...nextauth]/route";
 import { pusherServer } from "@/libs/pusher";
+import authOptions from "../../auth/[...nextauth]/auth";
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request, response: NextApiResponse) {
   const data = await req.text();
@@ -9,7 +10,7 @@ export async function POST(req: Request, response: NextApiResponse) {
   const session = await getServerSession(authOptions);
 
   if (!session?.user?.email) {
-    return response.status(401);
+    return new NextResponse("Unauthorized", { status: 401 });
   }
 
   const [socketId, channelName] = data
@@ -26,5 +27,5 @@ export async function POST(req: Request, response: NextApiResponse) {
     presenceData,
   );
 
-  return new Response(JSON.stringify(auth));
+  return NextResponse.json(auth);
 }
