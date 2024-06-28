@@ -1,41 +1,58 @@
+/**
+ * @swagger
+ * /api/register:
+ *   post:
+ *     description: Register a user
+ *     properties:
+ *       - in: query
+ *         name: name
+ *         schema:
+ *          type: string
+ *         description: Name
+ *     responses:
+ *       200:
+ *         description: Register a user
+ */
 
 import { prismaClient } from "@/libs/prismadb";
 import { NextResponse } from "next/server";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 
 export const POST = async (request: Request) => {
-try {
-  const { email, name, password } = await request.json();
+  try {
+    const { email, name, password } = await request.json();
 
-  if (!name) {
-    return new NextResponse("Name missed", { status: 400 });
-  }
+    if (!name) {
+      return new NextResponse("Name missed", { status: 400 });
+    }
 
-  if (!email) {
-    return new NextResponse("Email missed", { status: 400 });
-  }
+    if (!email) {
+      return new NextResponse("Email missed", { status: 400 });
+    }
 
-  if (!password) {
-    return new NextResponse("Password missed", { status: 400 });
-  }
+    if (!password) {
+      return new NextResponse("Password missed", { status: 400 });
+    }
 
-  const isUserRegistered = await prismaClient.user.findUnique({
-    where: { email },
-  });
+    const isUserRegistered = await prismaClient.user.findUnique({
+      where: { email },
+    });
 
-  if(isUserRegistered) {
-    return new NextResponse("User with this email already exists", { status: 404 });
-  }
+    if (isUserRegistered) {
+      return new NextResponse("User with this email already exists", {
+        status: 404,
+      });
+    }
 
-  const hashedPassword = await bcrypt.hash(password, 12);
+    const hashedPassword = await bcrypt.hash(password, 12);
 
-  const user = await prismaClient.user.create({
-    data: {
-      name,
-      email,
-      hashedPassword,
-    },
-  });
+    const user = await prismaClient.user.create({
+      data: {
+        name,
+        email,
+        hashedPassword,
+      },
+    });
 
     return NextResponse.json(user);
   } catch (error) {

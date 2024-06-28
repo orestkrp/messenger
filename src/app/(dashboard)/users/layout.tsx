@@ -1,5 +1,4 @@
 import { getUsers } from "@/actions/getUsers";
-import { Sidebar } from "@/components/sidebar/sidebar";
 import { UsersList } from "@/components/users/users-list";
 import { FC, PropsWithChildren } from "react";
 

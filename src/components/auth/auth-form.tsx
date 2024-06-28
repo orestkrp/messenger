@@ -28,7 +28,6 @@ export const AuthForm: FC<AuthFormProps> = ({ type, onSubmit }) => {
   const {
     register,
     formState: { errors },
-    reset,
     handleSubmit,
   } = useForm<FieldValues>({
     defaultValues: {
