@@ -13,7 +13,7 @@ const Register = () => {
     axios
       .post("/api/register", data)
       .then(() => {
-        router.push("/login");
+        router.push("/");
       })
       .catch(() => {
         toast.error("Somehing went wrong!");

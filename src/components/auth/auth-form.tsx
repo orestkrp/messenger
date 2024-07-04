@@ -88,7 +88,7 @@ export const AuthForm: FC<AuthFormProps> = ({ type, onSubmit }) => {
                 : "Already have an account?"}
             </span>
             <Link
-              href={type === "login" ? "/register" : "/login"}
+              href={type === "login" ? "/register" : "/"}
               className="hover:underline"
             >
               {type === "login" ? "Create an account" : "Login?"}
